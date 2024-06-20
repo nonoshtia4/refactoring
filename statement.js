@@ -27,7 +27,12 @@ function statement(invoice, plays) {
       default:
         throw new Error("unknown type: ${play.type}");
     }
+    volumeCredits += Math.max(perf.audience - 30, 0);
+    if ("comedy" === play.type) volumeCredits += Math.floor(perf.audience / 5);
+    result += `${play.name}: ${format(thisAmount / 100)} (${perf.audience} seats) \n`;
+    totalAmount += thisAmount;
   }
-  volumeCredits += Math.max(perf.audience - 30, 0);
-  if ("comedy" === play.type) volumeCredits += Math.floor(perf.audience / 5);
+  result += `Amount owed is ${format(totalAmount / 100)}`;
+  result += `You earned ${volumeCredits} credits\n`;
+  return result;
 }
