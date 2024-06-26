@@ -8,9 +8,7 @@ function statement(invoice, plays) {
     minimumFractionDigits: 2,
   }).format;
   for (let perf of invoice.performances) {
-    const play = plays[perf.playID];
-    let thisAmount = 0;
-    volumeCredits += Math.max(perf.audience - 30, 0);
+    volumeCredits += volumeCreditsFor(perf);
     if ("comedy" === play.type) volumeCredits += Math.floor(perf.audience / 5);
     result += `${play.name}: ${format(thisAmount / 100)} (${perf.audience} seats) \n`;
     thisAmount = amountFor(perf, play);
@@ -40,4 +38,12 @@ function amountFor(perf, play) {
       throw new Error("unknown type: ${play.type}");
   }
   return thisAmount;
+}
+
+function volumeCreditsFor(perf) {
+  let volumeCredits = 0;
+  volumeCredits += Math.max(perf.audience - 30, 0);
+  if ("comedy" === playFor(perf).type)
+    volumeCredits += Math.floor(perf.audience / 5);
+  return volumeCredits;
 }
